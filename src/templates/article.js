@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import Layout from "../containers/Layout"
 import BlogWidget from "../components/BlogWidget"
 import SEO from "../components/SEO"
-import placeholder from "../../assets/images/placeholder.png"
+import placeholder from "../assets/images/placeholder.png"
 
 const ArticlePage = ({ pageContext: { pageData, menuData, categories } }) => {
   const article = pageData

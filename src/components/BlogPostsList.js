@@ -2,7 +2,7 @@ import React from "react"
 import { Link } from 'react-router-dom';
 import BlogWidget from "./BlogWidget"
 import ZeroData from "./ZeroData"
-import placeholder from "../../assets/images/placeholder.png"
+import placeholder from "../assets/images/placeholder.png"
 
 const BlogPostsList = ({ blogPosts, categories }) => {
 

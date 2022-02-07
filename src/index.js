@@ -8,13 +8,17 @@ import {
   Routes, 
   Route
 } from 'react-router-dom';
+import IndexPage from './templates/index';
+import BlogPage from './templates/blog';
+import ArticlePage from './templates/article';
 
 ReactDOM.render(
   <React.StrictMode>
     <Router>
       <Routes>
-        <Route path="/" element={<App />} />
-        {/* <Route path="/experiences" element={<Experiences />} /> */}
+        <Route path="/" element={<IndexPage />} />
+        <Route path="/blog" element={<BlogPage />} />
+        <Route path="/blog/:slug" element={<ArticlePage />} />
       </Routes>
     </Router>
   </React.StrictMode>,
