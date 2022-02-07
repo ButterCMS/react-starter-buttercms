@@ -52,7 +52,7 @@ const IndexPage = () => {
         }
       })}
 
-      {/* <BlogSection blogPosts={blogPosts} /> */}
+      <BlogSection blogPosts={blogPosts} />
     </Layout>
   )
 }
