@@ -21,7 +21,6 @@ const Layout = ({ children, menuItems }) => {
         const currLink = sections[i];
         const currLinkHref = currLink.getAttribute('href');
         const val = currLinkHref.replace("/", "");
-
         const refElement = document.querySelector(val);
         const scrollTopMinus = scrollPos + 73;
 
@@ -34,7 +33,6 @@ const Layout = ({ children, menuItems }) => {
     window.document.addEventListener('scroll', onScroll, { passive: true });
     return () => window.document.removeEventListener('scroll', onScroll);
   }, []);
-
 
   return (
     <>

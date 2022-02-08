@@ -1,13 +1,38 @@
-import React from "react"
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from "react"
+import { Link, useParams } from 'react-router-dom';
 import Layout from "../containers/Layout"
 import BlogWidget from "../components/BlogWidget"
 import SEO from "../components/SEO"
+import Spinner from "../components/Spinner"
+import { butterCMS } from "../utils/buttercmssdk";
 import placeholder from "../assets/images/placeholder.png"
 
-const ArticlePage = ({ pageContext: { pageData, menuData, categories } }) => {
-  const article = pageData
-  const menuItems = menuData.data.butterCollection.value[0].menu_items
+const ArticlePage = () => {
+  const [loader, setLoader] = useState(true);
+  const [article, setArticle] = useState();
+  const [menuItems, setMenuItems] = useState([]);
+  const [categories, setCategories] = useState([]);
+
+  const { slug } = useParams();
+
+  useEffect(() => {
+    const loadData = async () => {
+      const menuItems = await butterCMS.content.retrieve(["navigation_menu"]);
+      setMenuItems(menuItems.data.data.navigation_menu[0].menu_items)
+
+      const article = await butterCMS.post.retrieve(slug)
+      console.log(article.data.data);
+      setArticle(article.data.data)
+
+      const categories = await butterCMS.category.list()
+      setCategories(categories.data.data)
+    }
+
+    loadData()
+    setLoader(false);
+  }, [slug]);
+
+  if (loader || !article) return (<Spinner />)
 
   return (
     <Layout menuItems={menuItems}>

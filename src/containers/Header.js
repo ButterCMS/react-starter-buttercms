@@ -10,11 +10,7 @@ const Header = ({ menuItems, activeLink }) => {
       const headerNavbar = document.querySelector(".navbar-area");
       const sticky = headerNavbar.offsetTop;
 
-      if (window.pageYOffset > sticky) {
-        setIsSticky(true)
-      } else {
-        setIsSticky(false)
-      }
+      setIsSticky(window.pageYOffset > sticky)
     };
 
     window.document.addEventListener('scroll', onScroll, { passive: true });
@@ -42,7 +38,7 @@ const Header = ({ menuItems, activeLink }) => {
                     <ul id="nav" className="navbar-nav ms-auto">
                       {menuItems.map(item =>
                         <li key={item.label} className="nav-item">
-                          <Link className={`nav-link page-scroll ${activeLink === `/${item.url}` ? "active" : ""}`} to={`/${item.url}`} onClick={() => setIsTogglerActive(false)}>{item.label}</Link>
+                          <a className={`nav-link page-scroll ${activeLink === `/${item.url}` ? "active" : ""}`} href={`/${item.url}`} onClick={() => setIsTogglerActive(false)}>{item.label}</a>
                         </li>
                       )}
                     </ul>

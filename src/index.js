@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {
   BrowserRouter as Router, 
@@ -17,8 +16,13 @@ ReactDOM.render(
     <Router>
       <Routes>
         <Route path="/" element={<IndexPage />} />
-        <Route path="/blog" element={<BlogPage />} />
+        <Route path="/blog" element={<BlogPage pageType="blog" />} />
         <Route path="/blog/:slug" element={<ArticlePage />} />
+        <Route path="/blog/category" element={<BlogPage pageType="blog" />} />
+        <Route path="/blog/search" element={<BlogPage pageType="search" />} />
+        <Route path="/blog/category/:slug" element={<BlogPage pageType="category" />} />
+        <Route path="/blog/tag/:slug" element={<BlogPage pageType="tag" />} />
+        
       </Routes>
     </Router>
   </React.StrictMode>,
