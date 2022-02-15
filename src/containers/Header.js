@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react"
-import { Link } from "react-router-dom"
 
 const Header = ({ menuItems, activeLink }) => {
   const [isSticky, setIsSticky] = useState(false);

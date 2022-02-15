@@ -6,33 +6,34 @@ import SEO from "../components/SEO"
 import Spinner from "../components/Spinner"
 import { butterCMS } from "../utils/buttercmssdk";
 import placeholder from "../assets/images/placeholder.png"
+import { useCategories, useMenuItems } from "../utils/hooks";
+import NotFoundSection from "../components/NotFoundSection"
 
 const ArticlePage = () => {
+  const [error, setError] = useState(false);
   const [loader, setLoader] = useState(true);
   const [article, setArticle] = useState();
-  const [menuItems, setMenuItems] = useState([]);
-  const [categories, setCategories] = useState([]);
 
   const { slug } = useParams();
+  const categories = useCategories();
+  const menuItems = useMenuItems();
 
   useEffect(() => {
     const loadData = async () => {
-      const menuItems = await butterCMS.content.retrieve(["navigation_menu"]);
-      setMenuItems(menuItems.data.data.navigation_menu[0].menu_items)
-
-      const article = await butterCMS.post.retrieve(slug)
-      console.log(article.data.data);
-      setArticle(article.data.data)
-
-      const categories = await butterCMS.category.list()
-      setCategories(categories.data.data)
+      try {
+        const article = await butterCMS.post.retrieve(slug)
+        setArticle(article.data.data)
+      } catch (error) {
+        setError(true)
+      }
+      setLoader(false);
     }
 
     loadData()
-    setLoader(false);
   }, [slug]);
 
-  if (loader || !article) return (<Spinner />)
+  if (error) return (<NotFoundSection />)
+  if (loader) return (<Spinner />)
 
   return (
     <Layout menuItems={menuItems}>
@@ -67,7 +68,7 @@ const ArticlePage = () => {
                       <a href="#"><img src={article.author.profile_image || placeholder} alt="#" /> {article.author.first_name} {article.author.last_name}</a>
                     </li>
                     <li>
-                      <a href="#"><i className="lni lni-calendar"></i> {article.published}
+                      <a href="#"><i className="lni lni-calendar"></i> {new Date(article.published).toLocaleString()}
                       </a>
                     </li>
                     <li>

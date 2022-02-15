@@ -27,7 +27,7 @@ const Footer = ({ menuItems, activeLink }) => {
               <h3>About Us</h3>
               <ul className="links">
                 {menuItems.map(item =>
-                  <li key={item.label}><Link className={`page-scroll ${activeLink === `/${item.url}` ? "active" : ""}`} to={`/${item.url}`}>{item.label}</Link></li>
+                  <li key={item.label}><a className={`page-scroll ${activeLink === `/${item.url}` ? "active" : ""}`} href={`/${item.url}`}>{item.label}</a></li>
                 )}
               </ul>
             </div>

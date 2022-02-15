@@ -25,7 +25,7 @@ const BlogPostsList = ({ blogPosts, categories }) => {
                           <a href="#"><img src={post.author.profile_image || placeholder} alt="#" />{post.author.first_name} {post.author.last_name}</a>
                         </li>
                         <li>
-                          <a href="#"><i className="lni lni-calendar"></i> {post.published}</a>
+                          <a href="#"><i className="lni lni-calendar"></i> {new Date(post.published).toLocaleString()}</a>
                         </li>
                         <li>
                           {post.tags.map(tag => {
