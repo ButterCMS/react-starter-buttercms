@@ -3,7 +3,7 @@ import { butterCMS } from "./buttercmssdk";
 
 // load menu items data
 export const useMenuItems = () => {
-  const [menuItems, setMenuItems] = useState(null);
+  const [menuItems, setMenuItems] = useState([]);
 
   useEffect(() => {
     const loadData = async () => { 
