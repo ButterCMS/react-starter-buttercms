@@ -7,9 +7,10 @@ const Header = ({ menuItems, activeLink }) => {
   useEffect(() => {
     const onScroll = () => {
       const headerNavbar = document.querySelector(".navbar-area");
-      const sticky = headerNavbar.offsetTop;
-
-      setIsSticky(window.pageYOffset > sticky)
+      if (headerNavbar) {
+        const sticky = headerNavbar.offsetTop;
+        setIsSticky(window.pageYOffset > sticky)
+      }
     };
 
     window.document.addEventListener('scroll', onScroll, { passive: true });
