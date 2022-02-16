@@ -37,10 +37,6 @@ const Layout = ({ children, menuItems }) => {
   try {
     return (
       <>
-        <Helmet>
-          <meta http-equiv="Content-Security-Policy" content="frame-ancestors 'self' https://buttercms.com;" />
-        </Helmet>
-  
         <Header menuItems={menuItems} activeLink={activeLink} />
   
         {children}
