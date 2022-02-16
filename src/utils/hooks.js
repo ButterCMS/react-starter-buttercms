@@ -28,7 +28,7 @@ export const useCategories = () => {
     }
 
     loadData()
-  }, []);
+  }, [categories]);
 
   return categories
 }
