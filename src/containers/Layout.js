@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react"
-import { Helmet } from "react-helmet"
 import Header from "./Header"
 import Footer from "./Footer"
 import ScrollToTop from "../containers/ScrollToTop"
@@ -34,21 +33,17 @@ const Layout = ({ children, menuItems }) => {
     return () => window.document.removeEventListener('scroll', onScroll);
   }, []);
 
-  try {
-    return (
-      <>
-        <Header menuItems={menuItems} activeLink={activeLink} />
-  
-        {children}
-  
-        <ScrollToTop />
-  
-        <Footer menuItems={menuItems} activeLink={activeLink} />
-      </>
-    )  
-  } catch (error) {
-    <h1>aaa</h1>
-  }
+  return (
+    <>
+      <Header menuItems={menuItems} activeLink={activeLink} />
+
+      {children}
+
+      <ScrollToTop />
+
+      <Footer menuItems={menuItems} activeLink={activeLink} />
+    </>
+  )
 }
 
 export default Layout;
