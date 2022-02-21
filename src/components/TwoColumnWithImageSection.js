@@ -15,7 +15,7 @@ const TwoColumnWithImageSection = (props) => {
               <div className="section-title">
                 <h2 className="mb-20">{props.fields.headline}</h2>
                 <div dangerouslySetInnerHTML={{ __html: props.fields.subheadline }}></div>
-                <a href={props.fields.button_url} className="main-btn btn-hover border-btn mt-30">{props.fields.button_label}</a>
+                <a href={props.fields.button_url} className="main-btn btn-hover border-btn mt-30" target="_blank">{props.fields.button_label}</a>
               </div>
             </div>
           </div>
