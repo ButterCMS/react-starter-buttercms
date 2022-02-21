@@ -14,6 +14,7 @@ const BlogPage = ({ pageType }) => {
   const [query, setQuery] = useState("");
   const [loader, setLoader] = useState(true);
   const [mainEntityName, setMainEntityName] = useState(null);
+  const [seoTitle, setSEOTitle] = useState(null);
   const [blogPosts, setBlogPosts] = useState([]);
   const { slug } = useParams();
 
@@ -33,17 +34,26 @@ const BlogPage = ({ pageType }) => {
         } catch (error) {
           setError(true)
         }
+        setSEOTitle(`search results for ${urlQuery}`)
       } else {
         let filterBy = {}
+        let entityName;
+
         try {
           if (pageType === "category") {
             // if category detail, filter posts by category and load detail
             filterBy = { category_slug: slug }
-            setMainEntityName((await butterCMS.category.retrieve(slug)).data.data.name)
+            entityName = (await butterCMS.category.retrieve(slug)).data.data.name
+            setMainEntityName(entityName)
+            setSEOTitle(`${pageType}: ${entityName}`)
           } else if (pageType === "tag") {
             // if tag detail, filter posts by tag and load detail
             filterBy = { tag_slug: slug }
-            setMainEntityName((await butterCMS.tag.retrieve(slug)).data.data.name)
+            entityName = (await butterCMS.tag.retrieve(slug)).data.data.name
+            setMainEntityName(entityName)
+            setSEOTitle(`${pageType}: ${entityName}`)
+          } else {
+            setSEOTitle(`all posts`)
           }
 
           // load all or filtered posts
@@ -67,7 +77,7 @@ const BlogPage = ({ pageType }) => {
 
   return (
     <Layout menuItems={menuItems}>
-      <SEO title={mainEntityName || (query && `Search results for ${query}`) || "Blog"} description={mainEntityName ? `All posts for ${mainEntityName || query}` : "All ButterCMS blog posts"} />
+      <SEO title={`Sample Blog - ${seoTitle}`} description={`Sample blog powered by ButterCMS, showing ${seoTitle}`} />
 
       <BlogPostsSection type={pageType} text={mainEntityName || query} />
       <BlogPostsList blogPosts={blogPosts} categories={categories} />
