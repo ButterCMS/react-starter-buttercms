@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Helmet } from "react-helmet"
+import { useLocation } from "react-router-dom"
 import Header from "./Header"
 import Footer from "./Footer"
 import ScrollToTop from "../containers/ScrollToTop"
@@ -11,6 +11,7 @@ import "../assets/css/main.css"
 
 const Layout = ({ children, menuItems }) => {
   const [activeLink, setActiveLink] = useState("");
+  const location = useLocation()
 
   useEffect(() => {
     const onScroll = () => {
@@ -34,21 +35,26 @@ const Layout = ({ children, menuItems }) => {
     return () => window.document.removeEventListener('scroll', onScroll);
   }, []);
 
-  try {
-    return (
-      <>
-        <Header menuItems={menuItems} activeLink={activeLink} />
-  
-        {children}
-  
-        <ScrollToTop />
-  
-        <Footer menuItems={menuItems} activeLink={activeLink} />
-      </>
-    )  
-  } catch (error) {
-    <h1>aaa</h1>
-  }
+  useEffect(() => {
+    if (location.hash) {
+      let elem = document.getElementById(location.hash.slice(1))
+      if (elem) elem.scrollIntoView({ behavior: "smooth" });
+    } else {
+      window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
+    }
+  }, [location])
+
+  return (
+    <>
+      <Header menuItems={menuItems} activeLink={activeLink} />
+
+      {children}
+
+      <ScrollToTop />
+
+      <Footer menuItems={menuItems} activeLink={activeLink} />
+    </>
+  )
 }
 
 export default Layout;
