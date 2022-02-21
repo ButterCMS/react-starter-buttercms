@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react"
+import { useLocation } from "react-router-dom"
 import Header from "./Header"
 import Footer from "./Footer"
 import ScrollToTop from "../containers/ScrollToTop"
@@ -10,6 +11,7 @@ import "../assets/css/main.css"
 
 const Layout = ({ children, menuItems }) => {
   const [activeLink, setActiveLink] = useState("");
+  const location = useLocation()
 
   useEffect(() => {
     const onScroll = () => {
@@ -32,6 +34,15 @@ const Layout = ({ children, menuItems }) => {
     window.document.addEventListener('scroll', onScroll, { passive: true });
     return () => window.document.removeEventListener('scroll', onScroll);
   }, []);
+
+  useEffect(() => {
+    if (location.hash) {
+      let elem = document.getElementById(location.hash.slice(1))
+      if (elem) elem.scrollIntoView({ behavior: "smooth" });
+    } else {
+      window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
+    }
+  }, [location])
 
   return (
     <>
