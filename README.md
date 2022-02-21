@@ -1,3 +1,5 @@
+![recommended node version](https://img.shields.io/badge/node-v16-green)
+
 # React + ButterCMS Starter Project
 
 This React starter project fully integrates with dynamic sample content from your ButterCMS account, including main menu, pages, blog posts, categories, and tags, all with a beautiful, custom theme with already-implemented search functionality. All of the included sample content is automatically created in your account dashboard when you sign up for a free trial of ButterCMS.
