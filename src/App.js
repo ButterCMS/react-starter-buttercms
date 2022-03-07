@@ -1,4 +1,3 @@
-import './App.css';
 import IndexPage from "./templates"
 
 function App() {
