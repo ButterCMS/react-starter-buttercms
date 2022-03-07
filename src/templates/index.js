@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react"
+import { useParams } from "react-router-dom"
 import Layout from "../containers/Layout"
 import FeaturesSection from "../components/FeaturesSection"
 import HeroSection from "../components/HeroSection"
@@ -16,13 +17,14 @@ const IndexPage = () => {
   const [loader, setLoader] = useState(true);
   const [page, setPage] = useState(null);
   const [blogPosts, setBlogPosts] = useState([]);
+  const { slug } = useParams();
 
   let menuItems = useMenuItems();
 
   useEffect(() => {
     const loadData = async () => {
       try {
-        const page = await butterCMS.page.retrieve("landing-page", "landing-page-with-components")
+        const page = await butterCMS.page.retrieve("landing-page", slug || "landing-page-with-components")
         setPage(page.data.data)
       } catch (error) {
         setError(true)
