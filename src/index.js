@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import {createRoot} from 'react-dom/client';
 import {
   BrowserRouter as Router, 
   Routes, 
@@ -18,7 +18,10 @@ const renderPage = (page) => {
   return page;
 }
 
-ReactDOM.render(
+const rootContainer = document.getElementById('root');
+const root = createRoot(rootContainer)
+
+root.render(
   <React.StrictMode>
     <Router>
       <Routes>
@@ -34,5 +37,4 @@ ReactDOM.render(
       </Routes>
     </Router>
   </React.StrictMode>,
-  document.getElementById('root')
 );
