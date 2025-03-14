@@ -1,28 +1,31 @@
 import React, { useEffect } from "react"
 import Testimonial from "./Testimonial"
-
-const tns = typeof window !== `undefined` ? require("tiny-slider").tns : null
+import { tns } from "tiny-slider"
 
 const TestimonialSection = (props) => {
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      tns({
-        container: '.testimonial-active',
-        autoplay: true,
-        autoplayTimeout: 5000,
-        autoplayButtonOutput: false,
-        mouseDrag: true,
-        gutter: 0,
-        nav: false,
-        navPosition: "bottom",
-        controls: true,
-        controlsText: [
-          '<i class="lni lni-chevron-left"></i>',
-          '<i class="lni lni-chevron-right"></i>',
-        ],
-        items: 1,
-      });
+    if (typeof window !== "undefined" && typeof tns === 'function') {
+      try {
+        tns({
+          container: '.testimonial-active',
+          autoplay: true,
+          autoplayTimeout: 5000,
+          autoplayButtonOutput: false,
+          mouseDrag: true,
+          gutter: 0,
+          nav: false,
+          navPosition: "bottom",
+          controls: true,
+          controlsText: [
+            '<i class="lni lni-chevron-left"></i>',
+            '<i class="lni lni-chevron-right"></i>',
+          ],
+          items: 1,
+        });
+      } catch (err) {
+        console.error("Error initializing slider:", err);
+      }
     }
   }, []);
 

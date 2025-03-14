@@ -24,7 +24,7 @@ const Header = ({ menuItems, activeLink }) => {
           <div className="row align-items-center">
             <div className="col-lg-12">
               <nav className="navbar navbar-expand-lg">
-                <a className="navbar-brand" href="https://buttercms.com">
+                <a className="navbar-brand" href="/">
                   <img src="https://cdn.buttercms.com/PBral0NQGmmFzV0uG7Q6" alt="Logo" />
                 </a>
                 <button className={`navbar-toggler ${isTogglerActive ? "active" : ""}`} onClick={() => setIsTogglerActive(!isTogglerActive)} type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,11 +36,17 @@ const Header = ({ menuItems, activeLink }) => {
                 <div className={`collapse navbar-collapse sub-menu-bar ${isTogglerActive ? "show" : ""}`} id="navbarSupportedContent">
                   <div className="ms-auto">
                     <ul id="nav" className="navbar-nav ms-auto">
-                      {menuItems.map(item =>
+                      {menuItems.map(item => (
                         <li key={item.label} className="nav-item">
-                          <a className={`nav-link page-scroll ${activeLink === `/${item.url}` ? "active" : ""}`} href={`/${item.url}`} onClick={() => setIsTogglerActive(false)}>{item.label}</a>
+                          <a 
+                            className={`nav-link page-scroll ${activeLink === `/${item.url}` ? "active" : ""}`} 
+                            href={`/${item.url}`}
+                            onClick={() => setIsTogglerActive(false)}
+                          >
+                            {item.label}
+                          </a>
                         </li>
-                      )}
+                      ))}
                     </ul>
                   </div>
                 </div> {/* <!-- navbar collapse --> */}

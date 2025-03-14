@@ -7,7 +7,7 @@ const NotFoundPage = () => {
     <Layout menuItems={[]}>
       <NotFoundSection />
     </Layout>
-)
+  )
 }
 
 export default NotFoundPage

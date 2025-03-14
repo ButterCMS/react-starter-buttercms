@@ -21,15 +21,17 @@ const ArticlePage = () => {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const article = await butterCMS.post.retrieve(slug)
-        setArticle(article.data.data)
+        const article = await butterCMS.post.retrieve(slug);
+        setArticle(article.data.data);
       } catch (error) {
-        setError(true)
+        setError(true);
       }
       setLoader(false);
     }
 
-    loadData()
+    if (slug) {
+      loadData();
+    }
   }, [slug]);
 
   if (error) return (<NotFoundSection />)
@@ -47,7 +49,7 @@ const ArticlePage = () => {
                 <h2>{article.title}</h2>
                 <ul className="breadcrumb-nav">
                   <li><Link to="/">Home</Link></li>
-                  <li><Link to="/blog">Blog</Link></li>
+                  <li><Link to="/blog/">Blog</Link></li>
                   <li>{article.title}</li>
                 </ul>
               </div>
@@ -73,7 +75,7 @@ const ArticlePage = () => {
                     </li>
                     <li>
                       {article.tags.map(tag => {
-                        return <Link key={tag.slug} to={`/blog/tag/${tag.slug}`}><i className="lni lni-tag"></i> {tag.name} </Link>
+                        return <Link key={tag.slug} to={`/blog/tag/${tag.slug}/`}><i className="lni lni-tag"></i> {tag.name} </Link>
                       })}
                     </li>
                   </ul>
@@ -87,7 +89,7 @@ const ArticlePage = () => {
               </div>
             </div>
 
-            {/* <!-- Searchbox --> */}
+            {/* <!-- Sidebar --> */}
             <aside className="col-lg-4 col-md-12 col-12">
               <BlogWidget categories={categories} />
             </aside>

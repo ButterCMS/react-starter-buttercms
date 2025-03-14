@@ -11,6 +11,7 @@ import SEO from "../components/SEO";
 import Spinner from "../components/Spinner";
 import { butterCMS } from "../utils/buttercmssdk";
 import { useMenuItems } from "../utils/hooks";
+import { initializeTestimonialSlider } from "../utils/initSliders";
 
 const IndexPage = () => {
   const [error, setError] = useState(false);
@@ -34,6 +35,17 @@ const IndexPage = () => {
       const posts = await butterCMS.post.list({ page: 1, page_size: 2 })
       setBlogPosts(posts.data.data)
       setLoader(false);
+
+      // Initialize testimonial slider after page is loaded
+      setTimeout(() => {
+        // Attempt to initialize sliders
+        initializeTestimonialSlider();
+        
+        // Try a second time after a longer delay to ensure DOM is ready
+        setTimeout(() => {
+          initializeTestimonialSlider();
+        }, 1000);
+      }, 500);
     }
 
     loadData()
