@@ -78,3 +78,4 @@ const BlogPostsSection = ({ type, text }) => {
 }
 
 export default BlogPostsSection;
+

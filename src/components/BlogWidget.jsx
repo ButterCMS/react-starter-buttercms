@@ -28,3 +28,4 @@ const BlogWidget = ({ categories }) => {
 }
 
 export default BlogWidget;
+

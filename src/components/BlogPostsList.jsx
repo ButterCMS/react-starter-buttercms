@@ -64,3 +64,4 @@ const BlogPostsList = ({ blogPosts, categories }) => {
 }
 
 export default BlogPostsList;
+
