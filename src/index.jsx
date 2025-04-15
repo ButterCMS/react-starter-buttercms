@@ -25,6 +25,7 @@ const DefaultBlogPage = () => <BlogPage pageType="blog" />;
 function App() {
   // If no API token is provided, show the NoApiKeyPage
   if (!import.meta.env.VITE_BUTTER_CMS_API_KEY) {
+
     return (
       <Router>
         <NoApiKeyPage />
@@ -80,6 +81,7 @@ function App() {
     
     // Use capture phase to intercept before React
     document.addEventListener('click', fixBlogNavigation, true);
+    
     return () => document.removeEventListener('click', fixBlogNavigation, true);
   }, []);
 

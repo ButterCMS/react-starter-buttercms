@@ -2,6 +2,7 @@ import React from "react"
 import { Link } from 'react-router-dom';
 
 const BlogWidget = ({ categories }) => {
+  
   return (
     <div className="sidebar">
       <div className="widget search-widget">

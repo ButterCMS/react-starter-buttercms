@@ -10,6 +10,7 @@ const ScrollToTop = () => {
     };
 
     window.document.addEventListener('scroll', onScroll, { passive: true });
+    
     return () => window.document.removeEventListener('scroll', onScroll);
   }, []);
 

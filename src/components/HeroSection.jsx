@@ -1,6 +1,7 @@
 import * as React from "react"
 
 const HeroSection = (props) => {
+  
   return (
     <section id={props.fields.scroll_anchor_id} className="hero-section">
       <div className="container">

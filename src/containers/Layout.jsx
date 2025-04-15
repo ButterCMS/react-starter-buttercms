@@ -27,6 +27,7 @@ const Layout = ({ children, menuItems }) => {
     };
 
     window.document.addEventListener('scroll', onScroll, { passive: true });
+
     return () => window.document.removeEventListener('scroll', onScroll);
   }, []);
 
@@ -56,12 +57,15 @@ const Layout = ({ children, menuItems }) => {
           
           // Update active link
           setActiveLink(`#${elementId}`);
+
           return true;
         } else if (attempts < maxAttempts) {
           // Try again with increasing delay
           setTimeout(attemptScroll, attempts * 200);
+
           return false;
         }
+        
         return false;
       };
       

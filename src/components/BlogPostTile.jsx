@@ -2,6 +2,7 @@ import React from "react"
 import { Link } from "react-router-dom"
 
 const BlogPostTile = (props) => {
+  
   return (
     <div className="col-lg-4 col-md-8 col-sm-10">
       <div className="single-blog">

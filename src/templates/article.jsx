@@ -75,6 +75,7 @@ const ArticlePage = () => {
                     </li>
                     <li>
                       {article.tags.map(tag => {
+                        
                         return <Link key={tag.slug} to={`/blog/tag/${tag.slug}/`}><i className="lni lni-tag"></i> {tag.name} </Link>
                       })}
                     </li>

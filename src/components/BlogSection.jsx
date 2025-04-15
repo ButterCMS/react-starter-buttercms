@@ -3,6 +3,7 @@ import { Link } from "react-router-dom"
 import BlogPostTile from "./BlogPostTile"
 
 const BlogSection = (props) => {
+
   return (
     <section id="blog" className="blog-section">
       <div className="container">

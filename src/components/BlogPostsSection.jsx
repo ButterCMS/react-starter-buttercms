@@ -49,6 +49,7 @@ const BlogPostsSection = ({ type, text }) => {
 
   if (!renderSection) {
     console.error("Invalid type for blog post section:", type);
+    
     return (
       <section style={{border: "2px solid red", padding: "20px", margin: "20px"}}>
         <div className="container">

@@ -1,6 +1,7 @@
 import * as React from "react"
 
 const TwoColumnWithImageSection = (props) => {
+  
   return (
     <section id={props.fields.scroll_anchor_id} className="cta-section">
       <div className="container">
