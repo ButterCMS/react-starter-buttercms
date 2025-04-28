@@ -18,7 +18,7 @@ const BlogPostsSection = ({ type, text }) => {
         <h2>Blog Posts by Category</h2>
         <ul className="breadcrumb-nav">
           <li><Link to="/">Home</Link></li>
-          <li><Link to="/blog">Blog</Link></li>
+          <li><Link to="/blog/">Blog</Link></li>
           <li>Category: {text}</li>
         </ul>
       </div>
@@ -28,7 +28,7 @@ const BlogPostsSection = ({ type, text }) => {
         <h2>Blog Posts by Tag</h2>
         <ul className="breadcrumb-nav">
           <li><Link to="/">Home</Link></li>
-          <li><Link to="/blog">Blog</Link></li>
+          <li><Link to="/blog/">Blog</Link></li>
           <li>Tag: {text}</li>
         </ul>
       </div>
@@ -38,7 +38,7 @@ const BlogPostsSection = ({ type, text }) => {
         <h2>Search Results</h2>
         <ul className="breadcrumb-nav">
           <li><Link to="/">Home</Link></li>
-          <li><Link to="/blog">Blog</Link></li>
+          <li><Link to="/blog/">Blog</Link></li>
           <li>Search: {text}</li>
         </ul>
       </div>
@@ -48,7 +48,21 @@ const BlogPostsSection = ({ type, text }) => {
   const renderSection = sections[type]
 
   if (!renderSection) {
-    throw new Error("Invalid type for blog post section");
+    console.error("Invalid type for blog post section:", type);
+    
+    return (
+      <section style={{border: "2px solid red", padding: "20px", margin: "20px"}}>
+        <div className="container">
+          <div className="row">
+            <div className="col-12">
+              <h2>Error: Invalid Section Type</h2>
+              <p>Received type: "{type || "undefined"}"</p>
+              <p>Expected one of: {Object.keys(sections).join(", ")}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
   }
 
   return (
@@ -64,3 +78,4 @@ const BlogPostsSection = ({ type, text }) => {
 }
 
 export default BlogPostsSection;
+

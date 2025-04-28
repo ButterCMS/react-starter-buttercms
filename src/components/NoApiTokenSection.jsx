@@ -1,6 +1,7 @@
 import * as React from "react"
 
 const NoApiTokenSection = () => {
+  
   return (
     <section id="home" className="hero-section">
       <div className="container">

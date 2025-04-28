@@ -8,6 +8,7 @@ export const useMenuItems = () => {
   useEffect(() => {
     const loadData = async () => { 
       const menuItems = await butterCMS.content.retrieve(["navigation_menu"]);
+      // Menu items loaded from ButterCMS
       setMenuItems(menuItems.data.data.navigation_menu[0].menu_items)
     }
 

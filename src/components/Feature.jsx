@@ -1,6 +1,7 @@
 import * as React from "react"
 
 const Feature = (props) => {
+  
   return (
     <div className="col-lg-6 col-md-6">
       <div className="single-feature">

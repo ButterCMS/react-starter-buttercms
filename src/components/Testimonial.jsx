@@ -1,6 +1,7 @@
 import * as React from "react"
 
 const Testimonial = (props) => {
+  
   return (
     <div className="single-testimonial">
       <div className="quote">

@@ -2,6 +2,7 @@ import * as React from "react"
 import Feature from "./Feature"
 
 const FeaturesSection = (props) => {
+  
   return (
     <section id={props.fields.scroll_anchor_id} className="feature-section">
       <div className="container">

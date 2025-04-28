@@ -2,6 +2,7 @@ import * as React from "react"
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 
 const SEO = ({ title, description, image }) => {
+  
   return (
     <HelmetProvider>
       <Helmet>

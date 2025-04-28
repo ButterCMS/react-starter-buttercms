@@ -16,10 +16,11 @@ const BlogPostsList = ({ blogPosts, categories }) => {
               {blogPosts.length === 0 && <ZeroData />}
 
               {blogPosts.map(post => {
+
                 return (<div key={post.slug} className="col-12 col-lg-6">
                   <div className="blog-roll-card">
                     <div className="blog-roll-card-meta">
-                      <h2 className="blog-roll-card-header"><Link to={`/blog/${post.slug}`}>{post.title}</Link></h2>
+                      <h2 className="blog-roll-card-header"><Link to={`/blog/${post.slug}/`}>{post.title}</Link></h2>
                       <ul className="blog-roll-card-meta-info">
                         <li>
                           <a href="#"><img src={post.author.profile_image || placeholder} alt="#" />{post.author.first_name} {post.author.last_name}</a>
@@ -29,7 +30,8 @@ const BlogPostsList = ({ blogPosts, categories }) => {
                         </li>
                         <li>
                           {post.tags.map(tag => {
-                            return <Link key={tag.slug} to={`/blog/tag/${tag.slug}`}><i className="lni lni-tag"></i> {tag.name} </Link>
+                            
+                            return <Link key={tag.slug} to={`/blog/tag/${tag.slug}/`}><i className="lni lni-tag"></i> {tag.name} </Link>
                           })}
                         </li>
                       </ul>
@@ -42,7 +44,7 @@ const BlogPostsList = ({ blogPosts, categories }) => {
                       <p>{post.summary}</p>
                     </div>
                     <div className="blog-roll-card-footer text-center">
-                      <Link to={`/blog/${post.slug}`} className="main-btn btn-hover">Read More</Link>
+                      <Link to={`/blog/${post.slug}/`} className="main-btn btn-hover">Read More</Link>
                     </div>
                   </div>
                 </div>)
@@ -62,3 +64,4 @@ const BlogPostsList = ({ blogPosts, categories }) => {
 }
 
 export default BlogPostsList;
+
