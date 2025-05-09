@@ -1,0 +1,683 @@
+import { useState, useEffect } from 'react';
+import { Lock, Key, BookOpen, Map, Clock, Award, Compass, RotateCcw, Eye, EyeOff } from 'lucide-react';
+
+// Main Escape Room Component
+export default function HistoricalEscapeRoom() {
+  // Game state
+  const [currentRoom, setCurrentRoom] = useState('start');
+  const [inventory, setInventory] = useState([]);
+  const [hints, setHints] = useState({ used: 0, available: 3 });
+  const [locks, setLocks] = useState({
+    document: { solved: false, code: '1776' },
+    map: { solved: false, code: 'LIBERTY' },
+    bookshelf: { solved: false, code: '1215' },
+    finalChest: { solved: false, code: 'REVOLUTION' }
+  });
+  const [messages, setMessages] = useState([]);
+  const [timer, setTimer] = useState(1800); // 30 minutes in seconds
+  const [gameComplete, setGameComplete] = useState(false);
+  const [timerActive, setTimerActive] = useState(false);
+  const [showIntro, setShowIntro] = useState(true);
+  
+  // Timer effect
+  useEffect(() => {
+    let interval;
+    if (timerActive && timer > 0) {
+      interval = setInterval(() => {
+        setTimer(prevTime => prevTime - 1);
+      }, 1000);
+    } else if (timer === 0) {
+      handleGameOver();
+    }
+    return () => clearInterval(interval);
+  }, [timerActive, timer]);
+  
+  // Format time for display
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+  };
+  
+  // Add item to inventory
+  const addToInventory = (item) => {
+    if (!inventory.includes(item)) {
+      setInventory([...inventory, item]);
+      addMessage(`You found a ${item}!`);
+    }
+  };
+  
+  // Add message to message log
+  const addMessage = (text) => {
+    setMessages(prev => [...prev, { text, time: formatTime(timer) }]);
+  };
+  
+  // Use hint
+  const useHint = (hintText) => {
+    if (hints.used < hints.available) {
+      setHints({...hints, used: hints.used + 1});
+      addMessage(`HINT: ${hintText}`);
+    } else {
+      addMessage("You've used all your hints!");
+    }
+  };
+  
+  // Check lock code
+  const checkCode = (lockId, enteredCode) => {
+    const lock = locks[lockId];
+    
+    if (lock.code.toLowerCase() === enteredCode.toLowerCase()) {
+      setLocks({
+        ...locks,
+        [lockId]: { ...lock, solved: true }
+      });
+      
+      addMessage(`You unlocked the ${lockId}!`);
+      
+      // Special effects for each lock
+      if (lockId === 'document') {
+        addToInventory('declaration key');
+      } else if (lockId === 'map') {
+        addToInventory('compass');
+      } else if (lockId === 'bookshelf') {
+        addToInventory('magna carta fragment');
+      } else if (lockId === 'finalChest') {
+        completeGame();
+      }
+      
+      return true;
+    } else {
+      addMessage(`The code for the ${lockId} is incorrect.`);
+      return false;
+    }
+  };
+  
+  // Handle game over
+  const handleGameOver = () => {
+    setTimerActive(false);
+    addMessage("Time's up! You didn't escape in time.");
+  };
+  
+  // Complete game
+  const completeGame = () => {
+    setTimerActive(false);
+    setGameComplete(true);
+    addMessage("Congratulations! You've solved all the puzzles and completed the escape room!");
+  };
+  
+  // Start game
+  const startGame = () => {
+    setShowIntro(false);
+    setTimerActive(true);
+    addMessage("The escape room challenge has begun! You have 30 minutes to escape.");
+  };
+  
+  // Reset game
+  const resetGame = () => {
+    setCurrentRoom('start');
+    setInventory([]);
+    setHints({ used: 0, available: 3 });
+    setLocks({
+      document: { solved: false, code: '1776' },
+      map: { solved: false, code: 'LIBERTY' },
+      bookshelf: { solved: false, code: '1215' },
+      finalChest: { solved: false, code: 'REVOLUTION' }
+    });
+    setMessages([]);
+    setTimer(1800);
+    setGameComplete(false);
+    setTimerActive(false);
+    setShowIntro(true);
+  };
+  
+  // Render room based on current room state
+  const renderRoom = () => {
+    switch(currentRoom) {
+      case 'start':
+        return <StudyRoom 
+          setCurrentRoom={setCurrentRoom} 
+          inventory={inventory} 
+          addToInventory={addToInventory}
+          locks={locks}
+          checkCode={checkCode}
+          addMessage={addMessage}
+          useHint={useHint}
+        />;
+      case 'library':
+        return <LibraryRoom 
+          setCurrentRoom={setCurrentRoom} 
+          inventory={inventory} 
+          addToInventory={addToInventory}
+          locks={locks}
+          checkCode={checkCode}
+          addMessage={addMessage}
+          useHint={useHint}
+        />;
+      case 'map_room':
+        return <MapRoom 
+          setCurrentRoom={setCurrentRoom} 
+          inventory={inventory} 
+          addToInventory={addToInventory}
+          locks={locks}
+          checkCode={checkCode}
+          addMessage={addMessage}
+          useHint={useHint}
+        />;
+      case 'final_room':
+        return <FinalRoom 
+          inventory={inventory}
+          locks={locks}
+          checkCode={checkCode}
+          addMessage={addMessage}
+          useHint={useHint}
+          gameComplete={gameComplete}
+        />;
+      default:
+        return <StudyRoom 
+          setCurrentRoom={setCurrentRoom} 
+          inventory={inventory} 
+          addToInventory={addToInventory}
+          locks={locks}
+          checkCode={checkCode}
+          addMessage={addMessage}
+          useHint={useHint}
+        />;
+    }
+  };
+  
+  // Introduction screen
+  if (showIntro) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-stone-800 text-stone-100 p-4">
+        <div className="max-w-2xl bg-stone-700 p-6 rounded-lg shadow-lg">
+          <h1 className="text-3xl font-bold text-center mb-4">Historical Secrets: Digital Escape Room</h1>
+          <div className="mb-6">
+            <p className="mb-4">You are a young historian who has discovered a hidden study belonging to a mysterious historical society. Rumor has it that within their chambers lies evidence of how key historical events were connected. Can you solve the puzzles and uncover the truth before time runs out?</p>
+            <p className="mb-4"><strong>Objective:</strong> Explore rooms, find items, solve puzzles, and ultimately unlock the final secret within 30 minutes.</p>
+            <p className="mb-4"><strong>Instructions:</strong></p>
+            <ul className="list-disc pl-5 mb-4">
+              <li>Navigate between rooms using the navigation buttons</li>
+              <li>Click on objects to interact with them</li>
+              <li>Collect items for your inventory to use in puzzles</li>
+              <li>Enter codes to unlock various locks</li>
+              <li>You have 3 hints available if you get stuck</li>
+            </ul>
+            <p><strong>Executive Skills Used:</strong> Pattern recognition, memory, planning, problem-solving, and time management</p>
+          </div>
+          <button 
+            onClick={startGame}
+            className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200"
+          >
+            Begin Challenge
+          </button>
+        </div>
+      </div>
+    );
+  }
+  
+  // Main game UI
+  return (
+    <div className="flex flex-col min-h-screen bg-stone-800 text-stone-100">
+      {/* Header with time and inventory */}
+      <header className="bg-stone-900 p-4 shadow-md">
+        <div className="max-w-6xl mx-auto flex justify-between items-center">
+          <h1 className="text-xl font-bold">Historical Secrets</h1>
+          <div className="flex items-center space-x-4">
+            <div className={`flex items-center space-x-2 ${timer < 300 ? 'text-red-500' : ''}`}>
+              <Clock size={20} />
+              <span className="font-mono text-lg">{formatTime(timer)}</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <span>Hints: {hints.available - hints.used}/{hints.available}</span>
+            </div>
+          </div>
+        </div>
+      </header>
+      
+      {/* Main game area */}
+      <div className="flex flex-1 overflow-hidden">
+        {/* Room display */}
+        <div className="flex-1 overflow-auto p-4">
+          {renderRoom()}
+        </div>
+        
+        {/* Sidebar with inventory and messages */}
+        <div className="w-80 bg-stone-900 p-4 overflow-auto flex flex-col">
+          {/* Inventory */}
+          <div className="mb-4">
+            <h2 className="text-lg font-bold mb-2 flex items-center">
+              <Key size={18} className="mr-2" />
+              Inventory
+            </h2>
+            <div className="bg-stone-800 rounded-lg p-3 min-h-32">
+              {inventory.length === 0 ? (
+                <p className="text-stone-400 text-sm">No items yet</p>
+              ) : (
+                <ul className="space-y-1">
+                  {inventory.map((item, index) => (
+                    <li key={index} className="text-sm bg-stone-700 px-2 py-1 rounded flex items-center">
+                      <span className="w-2 h-2 bg-emerald-500 rounded-full mr-2"></span>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </div>
+          
+          {/* Message log */}
+          <div className="flex-1 overflow-auto">
+            <h2 className="text-lg font-bold mb-2 flex items-center">
+              <BookOpen size={18} className="mr-2" />
+              Event Log
+            </h2>
+            <div className="bg-stone-800 rounded-lg p-3 max-h-96 overflow-y-auto">
+              {messages.length === 0 ? (
+                <p className="text-stone-400 text-sm">No events yet</p>
+              ) : (
+                <ul className="space-y-2">
+                  {messages.map((msg, index) => (
+                    <li key={index} className={`text-sm ${msg.text.startsWith('HINT:') ? 'text-yellow-400' : 'text-stone-300'}`}>
+                      <span className="text-stone-500 mr-2">[{msg.time}]</span>
+                      {msg.text}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </div>
+          
+          {/* Reset button */}
+          <button 
+            onClick={resetGame}
+            className="mt-4 bg-stone-700 hover:bg-stone-600 text-white text-sm py-2 px-4 rounded flex items-center justify-center"
+          >
+            <RotateCcw size={14} className="mr-2" />
+            Reset Game
+          </button>
+        </div>
+      </div>
+      
+      {/* Game complete modal */}
+      {gameComplete && (
+        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
+          <div className="bg-stone-800 rounded-lg shadow-lg p-6 max-w-md">
+            <h2 className="text-2xl font-bold mb-4 text-center flex items-center justify-center">
+              <Award size={24} className="mr-2 text-yellow-400" />
+              Mission Complete!
+            </h2>
+            <p className="mb-4">Congratulations! You've solved all the puzzles and discovered the connections between pivotal moments in history that shaped our world.</p>
+            <p className="mb-4">Time remaining: {formatTime(timer)}</p>
+            <p className="mb-4">Hints used: {hints.used}/{hints.available}</p>
+            <button 
+              onClick={resetGame}
+              className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded"
+            >
+              Play Again
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Study Room Component
+function StudyRoom({ setCurrentRoom, inventory, addToInventory, locks, checkCode, addMessage, useHint }) {
+  const [showDocumentPuzzle, setShowDocumentPuzzle] = useState(false);
+  const [documentCode, setDocumentCode] = useState('');
+  
+  // Check for desk drawer item
+  const checkDesk = () => {
+    if (!inventory.includes('old key')) {
+      addToInventory('old key');
+    } else {
+      addMessage("You've already searched the desk thoroughly.");
+    }
+  };
+  
+  // Handle document code submit
+  const handleDocumentSubmit = () => {
+    checkCode('document', documentCode);
+    setDocumentCode('');
+  };
+  
+  return (
+    <div className="h-full flex flex-col">
+      <h2 className="text-2xl font-bold mb-4">The Historian's Study</h2>
+      
+      <div className="relative flex-1 bg-stone-700 rounded-lg overflow-hidden">
+        {/* Room visualization */}
+        <div className="absolute inset-0 p-6 flex flex-col items-center justify-center">
+          <p className="text-center mb-6 text-stone-300">
+            You find yourself in a dusty study filled with historical artifacts and furniture.
+            A large desk sits in the center, bookshelves line the walls, and doors lead to other rooms.
+          </p>
+          
+          <div className="grid grid-cols-2 gap-6 w-full max-w-3xl">
+            {/* Desk */}
+            <div 
+              onClick={checkDesk}
+              className="bg-stone-800 hover:bg-stone-700 p-4 rounded-lg text-center cursor-pointer transition duration-200 transform hover:scale-105"
+            >
+              <h3 className="font-bold mb-2">Antique Desk</h3>
+              <p className="text-sm text-stone-400">A large wooden desk with several drawers.</p>
+              <button className="mt-2 bg-stone-600 hover:bg-stone-500 text-sm py-1 px-2 rounded">
+                Search
+              </button>
+            </div>
+            
+            {/* Historical Document */}
+            <div 
+              onClick={() => locks.document.solved ? addMessage("You've already decoded this document.") : setShowDocumentPuzzle(true)}
+              className="bg-stone-800 hover:bg-stone-700 p-4 rounded-lg text-center cursor-pointer transition duration-200 transform hover:scale-105"
+            >
+              <h3 className="font-bold mb-2">Historical Document</h3>
+              <p className="text-sm text-stone-400">
+                An important-looking document with a numerical lock.
+              </p>
+              <button 
+                className={`mt-2 text-sm py-1 px-2 rounded ${locks.document.solved ? 'bg-emerald-700' : 'bg-stone-600 hover:bg-stone-500'}`}
+              >
+                {locks.document.solved ? 'Unlocked' : 'Examine'}
+              </button>
+            </div>
+            
+            {/* Bookshelf - leads to library */}
+            <div 
+              onClick={() => {
+                if (inventory.includes('old key')) {
+                  setCurrentRoom('library');
+                  addMessage("You use the old key to unlock the library door.");
+                } else {
+                  addMessage("The library door is locked. You need a key.");
+                }
+              }}
+              className="bg-stone-800 hover:bg-stone-700 p-4 rounded-lg text-center cursor-pointer transition duration-200 transform hover:scale-105"
+            >
+              <h3 className="font-bold mb-2">Library Door</h3>
+              <p className="text-sm text-stone-400">
+                A door with a sign reading "Library". It appears to be locked.
+              </p>
+              <button className="mt-2 bg-stone-600 hover:bg-stone-500 text-sm py-1 px-2 rounded">
+                {inventory.includes('old key') ? 'Use Key' : 'Locked'}
+              </button>
+            </div>
+            
+            {/* Map on Wall - leads to map room */}
+            <div 
+              onClick={() => {
+                setCurrentRoom('map_room');
+                addMessage("You enter a room with various historical maps and navigation tools.");
+              }}
+              className="bg-stone-800 hover:bg-stone-700 p-4 rounded-lg text-center cursor-pointer transition duration-200 transform hover:scale-105"
+            >
+              <h3 className="font-bold mb-2">Map Room Entrance</h3>
+              <p className="text-sm text-stone-400">
+                An open doorway with an old map mounted beside it.
+              </p>
+              <button className="mt-2 bg-stone-600 hover:bg-stone-500 text-sm py-1 px-2 rounded">
+                Enter
+              </button>
+            </div>
+          </div>
+          
+          {/* Hint button */}
+          <button
+            onClick={() => useHint("Look at the document carefully. The year of American independence might be important.")}
+            className="mt-6 bg-yellow-700 hover:bg-yellow-600 text-white text-sm py-1 px-3 rounded"
+          >
+            Use Hint
+          </button>
+        </div>
+      </div>
+      
+      {/* Document puzzle modal */}
+      {showDocumentPuzzle && (
+        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
+          <div className="bg-stone-800 rounded-lg shadow-lg p-6 max-w-md">
+            <h2 className="text-xl font-bold mb-4">Declaration Cipher</h2>
+            
+            <div className="mb-4 bg-stone-700 p-4 rounded-lg">
+              <p className="italic text-sm mb-2">The document appears to be a modified version of a famous declaration. You notice certain dates and numbers are emphasized:</p>
+              <p className="text-stone-300 mb-2">"We hold these truths to be self-evident, that all men are created equal, that they are endowed by their Creator with certain unalienable Rights..."</p>
+              <p className="text-stone-300 mb-4">"...When in the Course of human events, it becomes necessary for one people to dissolve the political bands which have connected them with another..."</p>
+              
+              <div className="text-center p-2 border border-dashed border-stone-500 rounded">
+                <p className="font-mono">The date: <span className="text-yellow-400">July 4, ????</span></p>
+                <p className="text-xs mt-1">Enter the year to unlock</p>
+              </div>
+            </div>
+            
+            <div className="flex mb-4">
+              <input
+                type="text"
+                value={documentCode}
+                onChange={(e) => setDocumentCode(e.target.value)}
+                placeholder="Enter 4-digit code"
+                className="flex-1 bg-stone-900 text-white p-2 rounded-l border border-stone-700 focus:outline-none focus:border-stone-500"
+              />
+              <button
+                onClick={handleDocumentSubmit}
+                className="bg-stone-600 hover:bg-stone-500 px-4 rounded-r"
+              >
+                Submit
+              </button>
+            </div>
+            
+            <div className="flex justify-between">
+              <button
+                onClick={() => setShowDocumentPuzzle(false)}
+                className="bg-stone-700 hover:bg-stone-600 text-white py-1 px-3 rounded"
+              >
+                Close
+              </button>
+              
+              <button
+                onClick={() => useHint("When was the Declaration of Independence signed? The year is your code.")}
+                className="bg-yellow-700 hover:bg-yellow-600 text-white py-1 px-3 rounded flex items-center"
+              >
+                <Eye size={16} className="mr-1" />
+                Hint
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Library Room Component
+function LibraryRoom({ setCurrentRoom, inventory, locks, checkCode, addMessage, useHint }) {
+  const [showBookshelfPuzzle, setShowBookshelfPuzzle] = useState(false);
+  const [bookshelfCode, setBookshelfCode] = useState('');
+  
+  // Handle bookshelf code submit
+  const handleBookshelfSubmit = () => {
+    checkCode('bookshelf', bookshelfCode);
+    setBookshelfCode('');
+  };
+  
+  return (
+    <div className="h-full flex flex-col">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-2xl font-bold">Ancient Library</h2>
+        <button 
+          onClick={() => {
+            setCurrentRoom('start');
+            addMessage("You return to the study.");
+          }}
+          className="bg-stone-700 hover:bg-stone-600 text-sm py-1 px-3 rounded flex items-center"
+        >
+          Return to Study
+        </button>
+      </div>
+      
+      <div className="relative flex-1 bg-stone-700 rounded-lg overflow-hidden">
+        <div className="absolute inset-0 p-6 flex flex-col items-center justify-center">
+          <p className="text-center mb-6 text-stone-300">
+            The library is filled with ancient books, scrolls, and historical artifacts.
+            Some of the books seem to be arranged in a peculiar pattern.
+          </p>
+          
+          <div className="grid grid-cols-2 gap-6 w-full max-w-3xl">
+            {/* Bookshelf Puzzle */}
+            <div 
+              onClick={() => locks.bookshelf.solved ? addMessage("You've already solved the bookshelf puzzle.") : setShowBookshelfPuzzle(true)}
+              className="bg-stone-800 hover:bg-stone-700 p-4 rounded-lg text-center cursor-pointer transition duration-200 transform hover:scale-105"
+            >
+              <h3 className="font-bold mb-2">Ancient Law Section</h3>
+              <p className="text-sm text-stone-400">
+                Books about historical legal documents with a small numbered lock.
+              </p>
+              <button 
+                className={`mt-2 text-sm py-1 px-2 rounded ${locks.bookshelf.solved ? 'bg-emerald-700' : 'bg-stone-600 hover:bg-stone-500'}`}
+              >
+                {locks.bookshelf.solved ? 'Unlocked' : 'Examine'}
+              </button>
+            </div>
+            
+            {/* History Books */}
+            <div 
+              onClick={() => {
+                addMessage("You find books about the Magna Carta, describing it as a charter of rights agreed to by King John of England in 1215.");
+              }}
+              className="bg-stone-800 hover:bg-stone-700 p-4 rounded-lg text-center cursor-pointer transition duration-200 transform hover:scale-105"
+            >
+              <h3 className="font-bold mb-2">History Books</h3>
+              <p className="text-sm text-stone-400">
+                Various books about European history and important documents.
+              </p>
+              <button className="mt-2 bg-stone-600 hover:bg-stone-500 text-sm py-1 px-2 rounded">
+                Read
+              </button>
+            </div>
+            
+            {/* Secret Passage - only visible if bookshelf is solved */}
+            {locks.bookshelf.solved && (
+              <div 
+                onClick={() => {
+                  if (locks.document.solved) {
+                    setCurrentRoom('final_room');
+                    addMessage("You discover a hidden passage behind the bookshelf that leads to a secret chamber.");
+                  } else {
+                    addMessage("You need the declaration key to unlock this passage fully.");
+                  }
+                }}
+                className="col-span-2 bg-stone-800 hover:bg-stone-700 p-4 rounded-lg text-center cursor-pointer transition duration-200 transform hover:scale-105"
+              >
+                <h3 className="font-bold mb-2">Secret Passage</h3>
+                <p className="text-sm text-stone-400">
+                  A hidden doorway behind the bookshelf, revealing a passage to another room.
+                  It has a keyhole that might fit the declaration key.
+                </p>
+                <button className="mt-2 bg-stone-600 hover:bg-stone-500 text-sm py-1 px-2 rounded">
+                  {inventory.includes('declaration key') ? 'Enter Passage' : 'Need Key'}
+                </button>
+              </div>
+            )}
+          </div>
+          
+          {/* Hint button */}
+          <button
+            onClick={() => useHint("The Magna Carta was signed in what year? Look for this information in the history books.")}
+            className="mt-6 bg-yellow-700 hover:bg-yellow-600 text-white text-sm py-1 px-3 rounded"
+          >
+            Use Hint
+          </button>
+        </div>
+      </div>
+      
+      {/* Bookshelf puzzle modal */}
+      {showBookshelfPuzzle && (
+        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
+          <div className="bg-stone-800 rounded-lg shadow-lg p-6 max-w-md">
+            <h2 className="text-xl font-bold mb-4">Ancient Law Codex</h2>
+            
+            <div className="mb-4 bg-stone-700 p-4 rounded-lg">
+              <p className="italic text-sm mb-2">The bookshelf contains various works about historical legal documents. One book about the Magna Carta has a small combination lock:</p>
+              
+              <div className="mb-3">
+                <p className="text-stone-300 text-sm">
+                  "The Great Charter of Freedoms, known as Magna Carta, was a crucial document limiting the power of the monarch and establishing that everyone, including the king, was subject to the law."
+                </p>
+              </div>
+              
+              <div className="text-center p-2 border border-dashed border-stone-500 rounded">
+                <p className="font-mono">Year signed: <span className="text-yellow-400">????</span></p>
+                <p className="text-xs mt-1">Enter the 4-digit year to unlock</p>
+              </div>
+            </div>
+            
+            <div className="flex mb-4">
+              <input
+                type="text"
+                value={bookshelfCode}
+                onChange={(e) => setBookshelfCode(e.target.value)}
+                placeholder="Enter 4-digit code"
+                className="flex-1 bg-stone-900 text-white p-2 rounded-l border border-stone-700 focus:outline-none focus:border-stone-500"
+              />
+              <button
+                onClick={handleBookshelfSubmit}
+                className="bg-stone-600 hover:bg-stone-500 px-4 rounded-r"
+              >
+                Submit
+              </button>
+            </div>
+            
+            <div className="flex justify-between">
+              <button
+                onClick={() => setShowBookshelfPuzzle(false)}
+                className="bg-stone-700 hover:bg-stone-600 text-white py-1 px-3 rounded"
+              >
+                Close
+              </button>
+              
+              <button
+                onClick={() => useHint("The Magna Carta was signed in 1215. That's your code.")}
+                className="bg-yellow-700 hover:bg-yellow-600 text-white py-1 px-3 rounded flex items-center"
+              >
+                <Eye size={16} className="mr-1" />
+                Hint
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Map Room Component
+function MapRoom({ setCurrentRoom, inventory, addToInventory, locks, checkCode, addMessage, useHint }) {
+  const [showMapPuzzle, setShowMapPuzzle] = useState(false);
+  const [mapCode, setMapCode] = useState('');
+  
+  // Handle map code submit
+  const handleMapSubmit = () => {
+    checkCode('map', mapCode);
+    setMapCode('');
+  };
+  
+  return (
+    <div className="h-full flex flex-col">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-2xl font-bold">Historical Map Room</h2>
+        <button 
+          onClick={() => {
+            setCurrentRoom('start');
+            addMessage("You return to the study.");
+          }}
+          className="bg-stone-700 hover:bg-stone-600 text-sm py-1 px-3 rounded flex items-center"
+        >
+          Return to Study
+        </button>
+      </div>
+      
+      <div className="relative flex-1 bg-stone-700 rounded-lg overflow-hidden">
+        <div className="absolute inset-0 p-6 flex flex-col items-center justify-center">
+          <p className="text-center mb-6 text-stone-300">
+            This room contains various historical maps from different periods.
+            Navigation tools and ancient atlases are displayed around the room.
+          </p>
