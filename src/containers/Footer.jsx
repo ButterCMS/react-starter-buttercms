@@ -9,7 +9,7 @@ const Footer = ({ menuItems, activeLink }) => {
           <div className="col-xl-3 col-lg-4 col-md-6 col-sm-10">
             <div className="footer-widget">
               <div className="logo">
-                <a href="https://buttercms.com">
+                <a href="/">
                   <img width="200" src="https://cdn.buttercms.com/PBral0NQGmmFzV0uG7Q6" alt="logo" loading="lazy" />
                 </a>
               </div>
