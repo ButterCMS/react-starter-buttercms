@@ -32,8 +32,14 @@ const IndexPage = () => {
       }
 
       // Returns a list of published posts. The posts are returned sorted by publish date, with the most recent posts appearing first.
-      const posts = await butterCMS.post.list({ page: 1, page_size: 2 })
-      setBlogPosts(posts.data.data)
+      try {
+        const posts = await butterCMS.post.list({ page: 1, page_size: 2 })
+        setBlogPosts(posts.data.data)
+      }
+      catch(err) {
+        setError(true)
+      }
+
       setLoader(false);
 
       // Initialize testimonial slider after page is loaded
