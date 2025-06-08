@@ -7,9 +7,14 @@ export const useMenuItems = () => {
 
   useEffect(() => {
     const loadData = async () => { 
-      const menuItems = await butterCMS.content.retrieve(["navigation_menu"]);
-      // Menu items loaded from ButterCMS
-      setMenuItems(menuItems.data.data.navigation_menu[0].menu_items)
+      try {
+        const menuItems = await butterCMS.content.retrieve(["navigation_menu"]);
+        // Menu items loaded from ButterCMS
+        setMenuItems(menuItems.data.data.navigation_menu[0].menu_items)
+      }
+      catch(err) {
+        // do nothing
+      }
     }
 
     loadData()
@@ -24,8 +29,13 @@ export const useCategories = () => {
 
   useEffect(() => {
     const loadData = async () => { 
-      const categories = await butterCMS.category.list()
-      setCategories(categories.data.data)
+      try {
+        const categories = await butterCMS.category.list()
+        setCategories(categories.data.data)
+      }
+      catch(err) {
+        // do nothing
+      }
     }
 
     loadData()
